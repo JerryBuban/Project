@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://wpkxfkxdflaujxgcgnas.supabase.co";
+const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+  
+
+</script>
+</head>
+
+<body>
+
+    <h1>Record a Message</h1>
+
+    <button id="recordBtn">🎙️ Record</button>
+
+    <p id="status">Press Record to start.</p>
+
+    <audio id="audioPreview" controls style="display:none;"></audio>
+
+    <button id="submitBtn" style="display:none;">
+        📤 Submit Message
+    </button>
+  <br>
+
+<button onclick="window.location.href='messages.html'">
+    🔒 View Messages
+</button>
+  <script>
+const recordBtn = document.getElementById("recordBtn");
+const submitBtn = document.getElementById("submitBtn");
+const audioPreview = document.getElementById("audioPreview");
+const status = document.getElementById("status");
+
+let mediaRecorder;
+let audioChunks = [];
+let audioBlob;
+
+recordBtn.addEventListener("click", async () => {
+
+    if (!mediaRecorder || mediaRecorder.state === "inactive") {
+
+        try {
+            const stream =
+                await navigator.mediaDevices.getUserMedia({
+                    audio: true
+                });
+
+            audioChunks = [];
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+
+                stream.getTracks().forEach(track => track.stop());
+
+                audioBlob = new Blob(audioChunks, {
+                    type: "audio/webm"
+                });
+
+                audioPreview.src =
+                    URL.createObjectURL(audioBlob);
+
+                audioPreview.style.display = "block";
+                submitBtn.style.display = "inline-block";
+
+                status.textContent =
+                    "Recording finished. You can listen to it.";
+            };
+
+            mediaRecorder.start();
+
+            recordBtn.textContent = "⏹️ Stop Recording";
+            status.textContent = "🔴 Recording...";
+
+        } catch (error) {
+            console.error(error);
+            status.textContent =
+                "Microphone permission was denied or unavailable.";
+        }
+
+    } else if (mediaRecorder.state === "recording") {
+
+        mediaRecorder.stop();
+
+        recordBtn.textContent = "🎙️ Record Again";
+    }
+});
+  submitBtn.addEventListener("click", async () => {
+
+    if (!audioBlob) return;
+
+    status.textContent = "⏳ Uploading message...";
+
+    const fileName = `message_${Date.now()}.webm`;
+
+    const { error: uploadError } =
+        await supabaseClient
+            .storage
+            .from("greetings")
+            .upload(fileName, audioBlob, {
+                contentType: "audio/webm"
+            });
+
+    if (uploadError) {
+        console.error(uploadError);
+        status.textContent = "❌ Upload failed.";
+        return;
+    }
+
+    const { error: databaseError } =
+        await supabaseClient
+            .from("greetings")
+            .insert({
+                audio_path: fileName
+            });
+
+    if (databaseError) {
+        console.error(databaseError);
+        status.textContent =
+            "❌ Message uploaded, but saving failed.";
+        return;
+    }
+
+    status.textContent = "✅ Message submitted!";
+});
+</script>
+</body>
+</html>

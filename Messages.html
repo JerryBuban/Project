@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://wpkxfkxdflaujxgcgnas.supabase.co";
+const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+  
+  const loginBox = document.getElementById("loginBox");
+const messagesContent = document.getElementById("messagesContent");
+const passwordInput = document.getElementById("passwordInput");
+const loginBtn = document.getElementById("loginBtn");
+const loginStatus = document.getElementById("loginStatus");
+
+const PASSWORD = "Chano";
+
+loginBtn.addEventListener("click", () => {
+
+    if (passwordInput.value === PASSWORD) {
+
+        loginBox.style.display = "none";
+        messagesContent.style.display = "block";
+
+        loginStatus.textContent = "";
+
+    } else {
+
+        loginStatus.textContent = "❌ Incorrect password.";
+        passwordInput.value = "";
+    }
+});
+</script>
+</head>
+
+<body>
+
+    <div id="loginBox">
+        <h1>Private Messages</h1>
+
+        <input
+            type="password"
+            id="passwordInput"
+            placeholder="Enter password"
+        >
+
+        <button id="loginBtn">🔓 Unlock</button>
+
+        <p id="loginStatus"></p>
+    </div>
+
+    <div id="messagesContent" style="display:none;">
+        <h1>Messages</h1>
+
+        <div id="messagesList"></div>
+    </div>
+
+    <div id="messagesList"></div>
+<script>
+const messagesList = document.getElementById("messagesList");
+
+async function loadMessages() {
+
+    const { data, error } = await supabaseClient
+        .from("greetings")
+        .select("audio_path")
+        .order("id", { ascending: true });
+
+    if (error) {
+        console.error(error);
+        messagesList.textContent = "Unable to load messages.";
+        return;
+    }
+
+    messagesList.innerHTML = "";
+
+    data.forEach((message, index) => {
+
+        const container = document.createElement("div");
+
+        const title = document.createElement("h3");
+        title.textContent =
+            `🎙️ ${index + 1}${getOrdinal(index + 1)} Message`;
+
+        const audio = document.createElement("audio");
+        audio.controls = true;
+
+        const { data: publicURL } =
+            supabaseClient
+                .storage
+                .from("greetings")
+                .getPublicUrl(message.audio_path);
+
+        audio.src = publicURL.publicUrl;
+
+        container.appendChild(title);
+        container.appendChild(audio);
+
+        messagesList.appendChild(container);
+    });
+}
+
+function getOrdinal(number) {
+
+    if (number % 100 >= 11 && number % 100 <= 13) {
+        return "th";
+    }
+
+    switch (number % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+    }
+}
+
+loadMessages();
+</script>
+</body>
+</html>
