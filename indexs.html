@@ -33,8 +33,14 @@
     font-size: 16px;
     cursor: pointer;
     margin: 6px;
+            display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
 }
-
+button svg {
+    flex-shrink: 0;
+}
 button:hover {
     opacity: 0.85;
 }
@@ -97,20 +103,47 @@ const supabaseClient = supabase.createClient(
 <div class="card">
     <h1>Record a Message</h1>
 
-    <button id="recordBtn">🎙️ Record</button>
+    <button id="recordBtn"><svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+>
+    <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+    <path d="M5 10a7 7 0 0 0 14 0"></path>
+    <line x1="12" y1="19" x2="12" y2="22"></line>
+    <line x1="8" y1="22" x2="16" y2="22"></line>
+</svg>
+Record</button>
 
     <p id="status">Press Record to start.</p>
 
     <audio id="audioPreview" controls style="display:none;"></audio>
 
-    <button id="submitBtn" style="display:none;">
-        📤 Submit Message
+    <button id="submitBtn">
+    <svg width="20" height="20" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 2L11 13"></path>
+        <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+    </svg>
+    <span>Submit Message</span>
     </button>
   <br>
 
 <button onclick="window.location.href='Messages.html'">
-    🔒 View Messages
-</button>
+    <svg width="20" height="20" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+    <span>View Messages</span>
+    </button>
   <script>
 const recordBtn = document.getElementById("recordBtn");
 const submitBtn = document.getElementById("submitBtn");
@@ -164,7 +197,13 @@ recordBtn.addEventListener("click", async () => {
 
             mediaRecorder.start();
 
-            recordBtn.textContent = "⏹️ Stop Recording";
+            recordBtn.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24"
+        fill="currentColor">
+        <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+    </svg>
+    Stop Recording
+`;
             status.textContent = "🔴 Recording...";
 
         } catch (error) {
@@ -177,7 +216,17 @@ recordBtn.addEventListener("click", async () => {
 
         mediaRecorder.stop();
 
-        recordBtn.textContent = "🎙️ Record Again";
+        recordBtn.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+        <path d="M5 10a7 7 0 0 0 14 0"></path>
+        <line x1="12" y1="19" x2="12" y2="22"></line>
+        <line x1="8" y1="22" x2="16" y2="22"></line>
+    </svg>
+    Record Again
+`;
     }
 });
   submitBtn.addEventListener("click", async () => {
