@@ -179,7 +179,7 @@ async function loadMessages() {
 
     const { data, error } = await supabaseClient
         .from("greetings")
-        .select("audio_path, sender_name")
+        .select("audio_path, sender_name, created_at")
         .order("id", { ascending: true });
 
     if (error) {
@@ -210,6 +210,12 @@ async function loadMessages() {
     <span>From: ${message.sender_name || "Anonymous"}</span>
 `;
 
+const date = document.createElement("p");
+date.textContent = new Date(message.created_at).toLocaleString();
+date.style.margin = "-8px 0 15px";
+date.style.color = "#8f96aa";
+date.style.fontSize = "13px";
+
         const audio = document.createElement("audio");
         audio.controls = true;
 
@@ -222,7 +228,8 @@ async function loadMessages() {
         audio.src = publicURL.publicUrl;
 
         container.appendChild(title);
-        container.appendChild(audio);
+container.appendChild(date);
+container.appendChild(audio);
 
         messagesList.appendChild(container);
     });
