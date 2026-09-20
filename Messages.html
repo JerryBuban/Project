@@ -15,29 +15,7 @@ const supabaseClient = supabase.createClient(
     SUPABASE_KEY
 );
   
-  const loginBox = document.getElementById("loginBox");
-const messagesContent = document.getElementById("messagesContent");
-const passwordInput = document.getElementById("passwordInput");
-const loginBtn = document.getElementById("loginBtn");
-const loginStatus = document.getElementById("loginStatus");
-
-const PASSWORD = "Chano";
-
-loginBtn.addEventListener("click", () => {
-
-    if (passwordInput.value === PASSWORD) {
-
-        loginBox.style.display = "none";
-        messagesContent.style.display = "block";
-
-        loginStatus.textContent = "";
-
-    } else {
-
-        loginStatus.textContent = "❌ Incorrect password.";
-        passwordInput.value = "";
-    }
-});
+  
 </script>
 </head>
 
@@ -123,6 +101,30 @@ function getOrdinal(number) {
 }
 
 loadMessages();
+
+    const loginBox = document.getElementById("loginBox");
+const messagesContent = document.getElementById("messagesContent");
+const passwordInput = document.getElementById("passwordInput");
+const loginBtn = document.getElementById("loginBtn");
+const loginStatus = document.getElementById("loginStatus");
+
+const PASSWORD = "Chano";
+
+loginBtn.addEventListener("click", () => {
+
+    if (passwordInput.value === PASSWORD) {
+
+        loginBox.style.display = "none";
+        messagesContent.style.display = "block";
+
+        loginStatus.textContent = "";
+
+    } else {
+
+        loginStatus.textContent = "❌ Incorrect password.";
+        passwordInput.value = "";
+    }
+});
 </script>
 </body>
 </html>
