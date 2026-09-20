@@ -172,7 +172,6 @@ const supabaseClient = supabase.createClient(
         <div id="messagesList"></div>
     </div>
 
-    <div id="messagesList"></div>
 <script>
 const messagesList = document.getElementById("messagesList");
 
@@ -228,21 +227,6 @@ async function loadMessages() {
         messagesList.appendChild(container);
     });
 }
-
-function getOrdinal(number) {
-
-    if (number % 100 >= 11 && number % 100 <= 13) {
-        return "th";
-    }
-
-    switch (number % 10) {
-        case 1: return "st";
-        case 2: return "nd";
-        case 3: return "rd";
-        default: return "th";
-    }
-}
-
 loadMessages();
 
     const loginBox = document.getElementById("loginBox");
