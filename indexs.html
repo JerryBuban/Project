@@ -192,7 +192,7 @@ const submitBtn = document.getElementById("submitBtn");
 const audioPreview = document.getElementById("audioPreview");
 const status = document.getElementById("status");
 const senderName = document.getElementById("senderName");
-      
+    
 let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
@@ -323,11 +323,12 @@ recordBtn.addEventListener("click", async () => {
     }
 
     const { error: databaseError } =
-        await supabaseClient
-            .from("greetings")
-            .insert({
-                audio_path: fileName
-            });
+    await supabaseClient
+        .from("greetings")
+        .insert({
+            audio_path: fileName,
+            sender_name: senderName.value.trim() || "Anonymous"
+        });
 
     if (databaseError) {
         console.error(databaseError);
