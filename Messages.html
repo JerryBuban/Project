@@ -208,7 +208,7 @@ async function loadMessages() {
         <line x1="12" y1="19" x2="12" y2="22"></line>
         <line x1="8" y1="22" x2="16" y2="22"></line>
     </svg>
-    <span>${index + 1}${getOrdinal(index + 1)} Message</span>
+    <span>From: ${message.sender_name || "Anonymous"}</span>
 `;
 
         const audio = document.createElement("audio");
