@@ -180,7 +180,7 @@ async function loadMessages() {
 
     const { data, error } = await supabaseClient
         .from("greetings")
-        .select("audio_path")
+        .select("audio_path, sender_name")
         .order("id", { ascending: true });
 
     if (error) {
