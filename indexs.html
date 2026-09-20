@@ -100,7 +100,26 @@ button:hover {
         transform: rotate(180deg);
     }
 }
-        
+        #senderName {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #4a5268;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    font-size: 16px;
+}
+
+#senderName::placeholder {
+    color: #8f96aa;
+}
+
+#senderName:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+}
     </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -120,7 +139,12 @@ const supabaseClient = supabase.createClient(
 <body>
 <div class="card">
     <h1>Record a Message</h1>
-
+<input
+    id="senderName"
+    type="text"
+    placeholder="Your name"
+    maxlength="30"
+>
     <button id="recordBtn"><svg
     width="20"
     height="20"
@@ -167,7 +191,8 @@ const recordBtn = document.getElementById("recordBtn");
 const submitBtn = document.getElementById("submitBtn");
 const audioPreview = document.getElementById("audioPreview");
 const status = document.getElementById("status");
-
+const senderName = document.getElementById("senderName");
+      
 let mediaRecorder;
 let audioChunks = [];
 let audioBlob;
